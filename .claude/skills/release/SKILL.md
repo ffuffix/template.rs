@@ -4,7 +4,7 @@ description: Prepare a release. Verifies the project, bumps the version, updates
 disable-model-invocation: true
 argument-hint: "<version>"
 arguments: [version]
-allowed-tools: Bash(git status *) Bash(git tag *) Bash(git add *) Bash(git commit *) Bash(cargo package *)
+allowed-tools: Bash(git status *) Bash(git tag *) Bash(git add *) Bash(git commit *) Bash(cargo package *) Bash(python3 -m unittest *)
 ---
 
 Prepare release `$version`.

@@ -95,7 +95,7 @@ Each is kept unless the user says otherwise.
 ## 5. Finish
 
 1. Delete the setup itself: `.claude/skills/setup-template/`, `.claude/hooks/setup-pending.py`, `tests/hooks/test_setup_pending.py`, the `SessionStart` entry in `.claude/settings.json`, and the `setup-template` line in `AGENTS.md`.
-2. If `.claude/hooks/` is now empty, also delete it, the empty `hooks` block in `.claude/settings.json`, `tests/hooks/` and its row in `.claude/rules/testing.md`, the `Hook tests` step in `.github/workflows/ci.yml`, step 4 of `.claude/skills/release/checklist.md`, and the Python and hook test mentions in `.github/CONTRIBUTING.md`.
+2. If `.claude/hooks/` is now empty, also delete it, the empty `hooks` block in `.claude/settings.json`, `tests/hooks/` and its row in `.claude/rules/testing.md`, the `Hook tests` step in `.github/workflows/ci.yml`, step 4 of `.claude/skills/release/checklist.md`, the `python3` entry in the release skill's `allowed-tools`, and the Python and hook test mentions in `.github/CONTRIBUTING.md`.
 3. Run `cargo fmt`, `cargo clippy --all-targets -- -D warnings`, and `cargo test`, plus `python3 -m unittest discover -s tests/hooks` if `tests/hooks/` still exists. Fix anything that fails.
 4. Search for `template_rs`, `template.rs`, and `ffuffix`, and resolve any leftovers.
 5. Summarize what changed and what was removed, and suggest a commit message. Commit only if the user asks.
