@@ -79,7 +79,7 @@ Each is kept unless the user says otherwise.
 
 - Standard Rust test layout: move each file in `tests/unit/` into a `#[cfg(test)] mod tests` at the bottom of the source file it tests, move each integration test to `tests/<name>.rs` with `mod common;` at the top, and delete `tests/main.rs` and `tests/unit/`. Rewrite the Tests section of `.claude/CLAUDE.md`, `.claude/rules/testing.md`, the **Tests** bullet in `.github/CONTRIBUTING.md`, and the reviewer's line about tests under `tests/`.
 - Another changelog format, such as Keep a Changelog: rewrite `.claude/rules/changelog.md`, `CHANGELOG.md`, the **Changelog** bullet in `.github/CONTRIBUTING.md`, and step 4 of `.claude/skills/release/SKILL.md`.
-- No changelog: delete `CHANGELOG.md` and `.claude/rules/changelog.md`, and remove the changelog line from `.claude/CLAUDE.md`, step 4 of the release skill, the changelog check in the code reviewer, and the **Changelog** bullet in `.github/CONTRIBUTING.md`.
+- No changelog: delete `CHANGELOG.md` and `.claude/rules/changelog.md`, remove `/CHANGELOG.md` from `include` in `Cargo.toml`, and remove the changelog line from `.claude/CLAUDE.md`, step 4 of the release skill, the changelog check in the code reviewer, and the **Changelog** bullet in `.github/CONTRIBUTING.md`.
 - Lints: edit `[lints]` in `Cargo.toml`. If `unsafe_code` is no longer denied, update the `unsafe` lines in `.claude/rules/rust.md`.
 - Minimum Rust version: change `rust-version` in `Cargo.toml` and `MSRV` in `.github/workflows/ci.yml` together. If it matches the pinned toolchain, the `msrv` job checks nothing extra, so offer to remove it and the sentence about it in `.claude/CLAUDE.md`.
 

@@ -4,6 +4,7 @@
 - Fixed
   - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
   - Claude Code hooks now run in a project whose path contains spaces.
+  - The published crate no longer includes `.claude/`, `.github/`, or the hook tests.
 
 ### 0.1.0
 - Added
