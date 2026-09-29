@@ -1,5 +1,9 @@
 # Changelog
 
+### Unreleased
+- Fixed
+  - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
+
 ### 0.1.0
 - Added
   - Placeholder `greet` library function and `template_rs` binary.
