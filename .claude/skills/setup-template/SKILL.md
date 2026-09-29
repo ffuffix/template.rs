@@ -81,7 +81,7 @@ Each is kept unless the user says otherwise.
 - Another changelog format, such as Keep a Changelog: rewrite `.claude/rules/changelog.md`, `CHANGELOG.md`, the **Changelog** bullet in `.github/CONTRIBUTING.md`, and step 4 of `.claude/skills/release/SKILL.md`.
 - No changelog: delete `CHANGELOG.md` and `.claude/rules/changelog.md`, remove `/CHANGELOG.md` from `include` in `Cargo.toml`, and remove the changelog line from `.claude/CLAUDE.md`, step 4 of the release skill, the changelog check in the code reviewer, and the **Changelog** bullet in `.github/CONTRIBUTING.md`.
 - Lints: edit `[lints]` in `Cargo.toml`. If `unsafe_code` is no longer denied, update the `unsafe` lines in `.claude/rules/rust.md`.
-- Minimum Rust version: change `rust-version` in `Cargo.toml` and `MSRV` in `.github/workflows/ci.yml` together. If it matches the pinned toolchain, the `msrv` job checks nothing extra, so offer to remove it and the sentence about it in `.claude/CLAUDE.md`.
+- Minimum Rust version: change `rust-version` in `Cargo.toml` and `RUSTUP_TOOLCHAIN` in the `msrv` job of `.github/workflows/ci.yml` together. If it matches the pinned toolchain, the `msrv` job checks nothing extra, so offer to remove it and the sentence about it in `.claude/CLAUDE.md`.
 
 **Removing features.** A feature is only gone when nothing mentions it. After removing one, search the repository for its name and fix every remaining mention.
 
