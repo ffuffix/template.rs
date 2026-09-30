@@ -6,6 +6,7 @@
   - `/setup-template` reminds you to turn on private vulnerability reporting, which `SECURITY.md` relies on.
   - CI checks that the crate still builds from the files it would be published with.
   - Dependabot updates for the Rust toolchain, Cargo dependencies, and GitHub Actions.
+  - `/setup-template` asks whether the crate will be published to crates.io, and drops the packaging checks if not.
 - Fixed
   - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
   - Claude Code hooks now run in a project whose path contains spaces, in a checkout with Windows line endings, and when Claude Code runs them through PowerShell.

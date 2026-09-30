@@ -27,6 +27,7 @@ When confirming, say that most of the changes are inside `.claude/`, which Claud
 
 - Crate name, and a one-sentence description of what the project does.
 - Library and binary (the template has both), library only, or binary only. With binary only, tests can exercise it only by running it, so suggest keeping a small library for the logic.
+- Whether the crate will be published to crates.io (the template assumes it will). Libraries and command-line tools often are; services, games, and desktop apps usually aren't.
 - License: `MIT OR Apache-2.0` (the Rust convention), MIT, Apache-2.0, or none. If one is chosen, the copyright holder's name. The MIT-0 `LICENSE` covers only the template, so it is replaced or removed either way.
 - Keep the greeting example as a starting point, or start empty.
 
@@ -68,6 +69,8 @@ Each is kept unless the user says otherwise.
 
 **Package metadata.** Set `description`, `license`, and `repository` in `Cargo.toml`, deriving the repository URL from `git remote get-url origin`. Replace the template's `LICENSE` with the chosen license's text from its official source: `LICENSE-MIT` and `LICENSE-APACHE` for the dual license, otherwise `LICENSE`. With no license, delete `LICENSE` and the `license` field.
 
+**Not published.** Set `publish = false` in `Cargo.toml` and remove its `include` list, then remove what only matters for crates.io: the `Package` step in `.github/workflows/ci.yml` and the packaged crate in the CI sentence of `.github/CONTRIBUTING.md`, step 6 of `.claude/skills/release/checklist.md`, the `cargo package` entries in the release skill's `allowed-tools`, and the `cargo publish` line in its last step. Keep the `cargo publish` deny rules, which cost nothing.
+
 **Library or binary only.** For library only, delete `src/main.rs`, `tests/integration/`, `tests/common/`, and their `mod` lines in `tests/main.rs`. For binary only, move the logic into `src/main.rs`, delete `src/lib.rs`, `tests/unit/`, and its `mod` line, and remove the rule that tests see only the public API from `.claude/rules/testing.md` and the `pub` item check from `.claude/agents/code-reviewer.md`, because a binary has no public API. Either way, reword the error-handling line in `.claude/rules/rust.md`, which describes both the library and `main`, and update every description of the test layout that names a removed directory.
 
 **Starting empty.** Remove `greet` and `GreetError` along with the tests that use them, leave `src/main.rs` as an empty `fn main() {}` if the binary stays, and delete helpers in `tests/common/` that become unused, because clippy runs with `-D warnings` and unused code fails it. Remove the placeholder line from `.claude/CLAUDE.md`.
@@ -80,7 +83,7 @@ Each is kept unless the user says otherwise.
 
 - Standard Rust test layout: move each file in `tests/unit/` into a `#[cfg(test)] mod tests` at the bottom of the source file it tests, move each integration test to `tests/<name>.rs` with `mod common;` at the top, and delete `tests/main.rs` and `tests/unit/`. Rewrite the Tests section of `.claude/CLAUDE.md`, `.claude/rules/testing.md`, the **Tests** bullet in `.github/CONTRIBUTING.md`, and the reviewer's line about tests under `tests/`.
 - Another changelog format, such as Keep a Changelog: rewrite `.claude/rules/changelog.md`, `CHANGELOG.md`, the **Changelog** bullet in `.github/CONTRIBUTING.md`, and step 4 of `.claude/skills/release/SKILL.md`.
-- No changelog: delete `CHANGELOG.md` and `.claude/rules/changelog.md`, remove `/CHANGELOG.md` from `include` in `Cargo.toml`, and remove the changelog line from `.claude/CLAUDE.md`, step 4 of the release skill, the changelog check in the code reviewer, and the **Changelog** bullet in `.github/CONTRIBUTING.md`.
+- No changelog: delete `CHANGELOG.md` and `.claude/rules/changelog.md`, remove `/CHANGELOG.md` from `include` in `Cargo.toml` if it is still there, and remove the changelog line from `.claude/CLAUDE.md`, step 4 of the release skill, the changelog check in the code reviewer, and the **Changelog** bullet in `.github/CONTRIBUTING.md`.
 - Lints: edit `[lints]` in `Cargo.toml`. If `unsafe_code` is no longer denied, update the `unsafe` lines in `.claude/rules/rust.md`.
 - Minimum Rust version: change `rust-version` in `Cargo.toml` and `RUSTUP_TOOLCHAIN` in the `msrv` job of `.github/workflows/ci.yml` together. If it matches the pinned toolchain, the `msrv` job checks nothing extra, so offer to remove it and the sentence about it in `.claude/CLAUDE.md`.
 
