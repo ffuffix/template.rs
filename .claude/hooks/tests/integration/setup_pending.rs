@@ -81,6 +81,50 @@ fn stays_silent_in_the_template_repository_itself() {
 }
 
 #[test]
+fn stays_silent_in_a_fork_of_the_template() {
+    let project = Project::new();
+    project.set_origin("https://github.com/alice/template.rs.git");
+
+    let output = project.start_session();
+
+    assert!(output.status.success(), "{output:?}");
+    assert!(output.stdout.is_empty(), "{output:?}");
+}
+
+#[test]
+fn stays_silent_in_a_clone_of_a_local_copy_of_the_template() {
+    let project = Project::new();
+    project.set_origin("/home/alice/template.rs/.git");
+
+    let output = project.start_session();
+
+    assert!(output.status.success(), "{output:?}");
+    assert!(output.stdout.is_empty(), "{output:?}");
+}
+
+#[test]
+fn stays_silent_whatever_the_case_of_the_remote() {
+    let project = Project::new();
+    project.set_origin("https://github.com/FFuffix/Template.rs/");
+
+    let output = project.start_session();
+
+    assert!(output.status.success(), "{output:?}");
+    assert!(output.stdout.is_empty(), "{output:?}");
+}
+
+#[test]
+fn suggests_setup_when_the_name_only_starts_with_template_rs() {
+    let project = Project::new();
+    project.set_origin("https://github.com/ffuffix/template.rs-extras.git");
+
+    let output = project.start_session();
+
+    assert!(output.status.success(), "{output:?}");
+    assert!(String::from_utf8_lossy(&output.stdout).contains("/setup-template"));
+}
+
+#[test]
 fn stays_silent_once_setup_has_removed_the_skill() {
     let project = Project::new();
     project.set_origin("https://github.com/example/my-project.git");

@@ -8,6 +8,7 @@
   - Claude Code hooks now run in a project whose path contains spaces, in a checkout with Windows line endings, and when Claude Code runs them through PowerShell.
   - The published crate no longer includes `.claude/`, `.github/`, or the hook tests.
   - `/release` no longer asks for permission to run the hook tests.
+  - `/setup-template` is no longer suggested in forks of the template, which contributors use to send changes back.
 - Changed
   - The Claude Code hooks are a small Rust package run through `cargo` instead of Python scripts, so they work without Python, including on macOS, whose built-in `python3` was too old for them.
 

@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Turn this repository into the user's own project, then delete this skill. Other coding agents can follow this file directly.
 
-If `git remote get-url origin` points to `ffuffix/template.rs`, this is the template itself: stop and say so.
+If the repository that `git remote get-url origin` points to is named `template.rs`, whoever owns it, this is the template or a fork of it: stop and say so.
 
 ## How to ask
 
