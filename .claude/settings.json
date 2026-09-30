@@ -21,7 +21,15 @@
     ],
     "deny": [
       "Bash(cargo publish *)",
+      "Bash(cargo +* publish)",
+      "Bash(cargo +* publish *)",
+      "Bash(cargo -* publish)",
+      "Bash(cargo -* publish *)",
       "PowerShell(cargo publish *)",
+      "PowerShell(cargo +* publish)",
+      "PowerShell(cargo +* publish *)",
+      "PowerShell(cargo -* publish)",
+      "PowerShell(cargo -* publish *)",
       "Read(./.env)",
       "Read(./.env.*)"
     ]

@@ -11,4 +11,4 @@ The rest of `.claude/` holds more detail:
 - `.claude/skills/release/SKILL.md`: the release procedure, when you are asked to cut a release.
 - `.claude/skills/setup-template/SKILL.md`: first-time setup for a project created from this template. If this file exists and the repository that `git remote get-url origin` points to isn't named `template.rs` (the template or a fork of it), suggest it before other work.
 
-Claude Code formats Rust files through a hook and is blocked from running `cargo publish`. Other agents run `cargo fmt` themselves after editing Rust files, and never run `cargo publish` or `git push` unless asked.
+Claude Code formats Rust files through a hook, and its permission rules deny `cargo publish`. Other agents run `cargo fmt` themselves after editing Rust files, and never run `cargo publish` or `git push` unless asked.
