@@ -3,6 +3,7 @@
 ### Unreleased
 - Added
   - MIT-0 license for the template, so projects made from it don't have to keep its copyright notice.
+  - `/setup-template` reminds you to turn on private vulnerability reporting, which `SECURITY.md` relies on.
 - Fixed
   - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
   - Claude Code hooks now run in a project whose path contains spaces, in a checkout with Windows line endings, and when Claude Code runs them through PowerShell.
@@ -13,6 +14,7 @@
   - Claude Code is also denied `cargo publish` when a toolchain or flag comes first, as in `cargo +stable publish`.
   - `/release` creates an annotated tag, so the `git push --follow-tags` it prints pushes the tag too.
   - The `code-reviewer` agent reviews new files that haven't been added to git yet.
+  - `/setup-template` no longer leaves rules describing removed code after a library-only, binary-only, or empty setup.
 - Changed
   - The Claude Code hooks are a small Rust package run through `cargo` instead of Python scripts, so they work without Python, including on macOS, whose built-in `python3` was too old for them.
   - Claude Code only calls a change done once `cargo doc --no-deps` also finishes without warnings, matching CI.
