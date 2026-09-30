@@ -60,6 +60,7 @@ Each is kept unless the user says otherwise.
 - `SECURITY.md`, and the acknowledgement time it promises (7 days).
 - The designed headers on `CONTRIBUTING.md` and `SECURITY.md`, or plain Markdown headings.
 - The toolchain pinned in `rust-toolchain.toml`, or the latest stable Rust (check with `rustup check`).
+- Dependabot, which opens pull requests for new Rust releases, dependency updates, and new GitHub Actions versions.
 
 ## 4. Apply
 
@@ -91,11 +92,12 @@ Each is kept unless the user says otherwise.
 - `SECURITY.md`: `.github/SECURITY.md` and `.github/assets/header_security.svg`.
 - Designed headers: replace the image block at the top of `.github/CONTRIBUTING.md` with `# Contributing` and of `.github/SECURITY.md` with `# Security policy`, then delete `header_contributing.svg` and `header_security.svg`. If `.github/assets/` ends up empty, delete it.
 - Latest stable toolchain: update `channel` in `rust-toolchain.toml` and the version in `.github/CONTRIBUTING.md` if it names one.
+- Dependabot: `.github/dependabot.yml`.
 
 ## 5. Finish
 
 1. Delete the setup itself: `.claude/skills/setup-template/`, `.claude/hooks/src/setup_pending.rs` with its `mod` line, match arm, and usage entry in `.claude/hooks/src/main.rs`, `.claude/hooks/tests/integration/setup_pending.rs` with its `mod` line, the `SessionStart` entry in `.claude/settings.json`, and the `setup-template` line in `AGENTS.md`.
-2. If no hooks are left in `.claude/hooks/src/`, also delete `.claude/hooks/`, the empty `hooks` block in `.claude/settings.json`, the hooks sentences in `.claude/CLAUDE.md`, the hooks paragraph and path in `.claude/rules/testing.md`, the `Hooks` step and the `.claude/hooks` cache entry in `.github/workflows/ci.yml`, step 4 of `.claude/skills/release/checklist.md`, the hooks mention in `.github/CONTRIBUTING.md`, and `/.claude/hooks/target` in `.gitignore`.
+2. If no hooks are left in `.claude/hooks/src/`, also delete `.claude/hooks/`, the empty `hooks` block in `.claude/settings.json`, the hooks sentences in `.claude/CLAUDE.md`, the hooks paragraph and path in `.claude/rules/testing.md`, the `Hooks` step and the `.claude/hooks` cache entry in `.github/workflows/ci.yml`, the `/.claude/hooks` directory in `.github/dependabot.yml`, step 4 of `.claude/skills/release/checklist.md`, the hooks mention in `.github/CONTRIBUTING.md`, and `/.claude/hooks/target` in `.gitignore`.
 3. Run `cargo fmt`, `cargo clippy --all-targets -- -D warnings`, and `cargo test`, and the same three with `--manifest-path .claude/hooks/Cargo.toml` if `.claude/hooks/` still exists. Fix anything that fails.
 4. Search for `template_rs`, `template.rs`, and `ffuffix`, and resolve any leftovers.
 5. Summarize what changed and what was removed, and suggest a commit message. Commit only if the user asks. If `SECURITY.md` stays, remind the user to turn on private vulnerability reporting in the repository's settings, because the **Report a vulnerability** button it points to only appears once that is on.
