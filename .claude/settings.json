@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/setup-pending.py",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/hooks/setup-pending.py\"",
             "timeout": 15
           }
         ]
@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/cargo-fmt.py",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/hooks/cargo-fmt.py\"",
             "timeout": 60
           }
         ]
