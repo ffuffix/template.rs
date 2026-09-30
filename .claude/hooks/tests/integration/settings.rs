@@ -38,6 +38,13 @@ fn project_with_spaces(shell: &str) -> PathBuf {
         .join("hook-commands")
         .join(shell)
         .join("my project");
+    fs::create_dir_all(&project).expect("the project can be created");
+    // Projects often grow into a workspace, which the hooks package must stay out of.
+    fs::write(
+        project.join("Cargo.toml"),
+        "[workspace]\nresolver = \"3\"\n",
+    )
+    .expect("the workspace manifest can be written");
     let hooks = project.join(".claude").join("hooks");
     copy_dir(&Path::new(HOOKS).join("src"), &hooks.join("src"));
     for file in ["Cargo.toml", "Cargo.lock"] {
@@ -84,14 +91,14 @@ fn assert_hook_commands_run(shell: &str, flag: &str) {
 }
 
 #[test]
-fn run_through_sh_from_a_path_with_spaces() {
+fn run_through_sh_from_a_workspace_at_a_path_with_spaces() {
     if installed("sh") {
         assert_hook_commands_run("sh", "-c");
     }
 }
 
 #[test]
-fn run_through_powershell_from_a_path_with_spaces() {
+fn run_through_powershell_from_a_workspace_at_a_path_with_spaces() {
     if installed("pwsh") {
         assert_hook_commands_run("pwsh", "-Command");
     }
