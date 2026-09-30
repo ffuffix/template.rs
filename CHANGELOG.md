@@ -21,6 +21,7 @@
 - Changed
   - The Claude Code hooks are a small Rust package run through `cargo` instead of Python scripts, so they work without Python, including on macOS, whose built-in `python3` was too old for them.
   - Claude Code only calls a change done once `cargo doc --no-deps` also finishes without warnings, matching CI.
+  - The formatting hook formats only the file Claude edited, so edits stay fast in large projects and other files are left alone.
 
 ### 0.1.0
 - Added

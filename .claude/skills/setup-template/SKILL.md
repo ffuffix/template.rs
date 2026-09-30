@@ -56,7 +56,7 @@ Check one thing yourself: compare the project rules with the user's personal ins
 Each is kept unless the user says otherwise.
 
 - The `code-reviewer` agent and the `/release` skill.
-- The hook that runs `cargo fmt` after every edit.
+- The hook that runs rustfmt on every Rust file Claude edits.
 - `AGENTS.md`, which points other coding agents to these instructions.
 - `SECURITY.md`, and the acknowledgement time it promises (7 days).
 - The designed headers on `CONTRIBUTING.md` and `SECURITY.md`, or plain Markdown headings.
@@ -90,7 +90,7 @@ Each is kept unless the user says otherwise.
 **Removing features.** A feature is only gone when nothing mentions it. After removing one, search the repository for its name and fix every remaining mention.
 
 - `code-reviewer` and `/release`: `.claude/agents/code-reviewer.md` and `.claude/skills/release/`, plus their lines in `AGENTS.md`.
-- The formatting hook: its `PostToolUse` entry in `.claude/settings.json`, `.claude/hooks/src/cargo_fmt.rs` with its `mod` line, match arm, and usage entry in `.claude/hooks/src/main.rs`, `.claude/hooks/tests/integration/cargo_fmt.rs` with its `mod` line, and the formatting hook mentions in `.claude/CLAUDE.md`, `AGENTS.md`, and `.github/CONTRIBUTING.md`. In `.claude/CLAUDE.md`, replace the hook line with an instruction to run `cargo fmt` after editing Rust files.
+- The formatting hook: its `PostToolUse` entry in `.claude/settings.json`, `.claude/hooks/src/rustfmt.rs` with its `mod` line, match arm, and usage entry in `.claude/hooks/src/main.rs`, `.claude/hooks/tests/integration/rustfmt.rs` with its `mod` line, and the formatting hook mentions in `.claude/CLAUDE.md`, `AGENTS.md`, and `.github/CONTRIBUTING.md`. In `.claude/CLAUDE.md`, replace the hook line with an instruction to run `cargo fmt` after editing Rust files.
 - `AGENTS.md`: the file, and the sentence about other assistants in `.github/CONTRIBUTING.md`.
 - `SECURITY.md`: `.github/SECURITY.md` and `.github/assets/header_security.svg`.
 - Designed headers: replace the image block at the top of `.github/CONTRIBUTING.md` with `# Contributing` and of `.github/SECURITY.md` with `# Security policy`, then delete `header_contributing.svg` and `header_security.svg`. If `.github/assets/` ends up empty, delete it.
