@@ -1,6 +1,8 @@
 # Changelog
 
 ### Unreleased
+- Added
+  - MIT-0 license for the template, so projects made from it don't have to keep its copyright notice.
 - Fixed
   - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
   - Claude Code hooks now run in a project whose path contains spaces, in a checkout with Windows line endings, and when Claude Code runs them through PowerShell.

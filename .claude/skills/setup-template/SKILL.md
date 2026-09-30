@@ -21,13 +21,13 @@ When confirming, say that most of the changes are inside `.claude/`, which Claud
 - **Full setup** (recommended): sections 1 to 3.
 - **Quick setup**: section 1 only. Conventions and features stay as the template has them, but the name, README, and changelog still become the user's own.
 - **Not now**: change nothing. Setup is suggested again next session.
-- **Skip setup**: keep the project exactly as the template made it and stop suggesting setup. Apply only steps 1 to 3 of Finish, and mention that the README and changelog still describe the template, including `/setup-template` itself.
+- **Skip setup**: keep the project exactly as the template made it and stop suggesting setup. Apply only steps 1 to 3 of Finish, and mention that the README, changelog, and `LICENSE` still describe the template, including `/setup-template` itself.
 
 ## 1. The project
 
 - Crate name, and a one-sentence description of what the project does.
 - Library and binary (the template has both), library only, or binary only. With binary only, tests can exercise it only by running it, so suggest keeping a small library for the logic.
-- License: `MIT OR Apache-2.0` (the Rust convention), MIT, Apache-2.0, or none. If one is chosen, the copyright holder's name.
+- License: `MIT OR Apache-2.0` (the Rust convention), MIT, Apache-2.0, or none. If one is chosen, the copyright holder's name. The MIT-0 `LICENSE` covers only the template, so it is replaced or removed either way.
 - Keep the greeting example as a starting point, or start empty.
 
 ## 2. Conventions (full setup)
@@ -65,7 +65,7 @@ Each is kept unless the user says otherwise.
 
 **Name.** It appears in `Cargo.toml`, in `use template_rs::` in `src/main.rs` and `tests/unit/`, in `CARGO_BIN_EXE_template_rs` in `tests/common/mod.rs` (the binary takes the package name), and in the titles of `.claude/CLAUDE.md` and `AGENTS.md`. Run `cargo check` afterwards so `Cargo.lock` follows.
 
-**Package metadata.** Set `description`, `license`, and `repository` in `Cargo.toml`, deriving the repository URL from `git remote get-url origin`. Add the license text from its official source: `LICENSE-MIT` and `LICENSE-APACHE` for the dual license, otherwise `LICENSE`.
+**Package metadata.** Set `description`, `license`, and `repository` in `Cargo.toml`, deriving the repository URL from `git remote get-url origin`. Replace the template's `LICENSE` with the chosen license's text from its official source: `LICENSE-MIT` and `LICENSE-APACHE` for the dual license, otherwise `LICENSE`. With no license, delete `LICENSE` and the `license` field.
 
 **Library or binary only.** For library only, delete `src/main.rs`, `tests/integration/`, `tests/common/`, and their `mod` lines in `tests/main.rs`. For binary only, move the logic into `src/main.rs`, delete `src/lib.rs`, `tests/unit/`, and its `mod` line, and reword the library line in `.claude/rules/rust.md`. Either way, update every description of the test layout that names a removed directory.
 

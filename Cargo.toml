@@ -3,7 +3,8 @@ name = "template_rs"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
-include = ["/src", "/build.rs", "/tests/**/*.rs", "/README.md", "/CHANGELOG.md", "/LICENSE*"]
+license = "MIT-0"
+include =["/src", "/build.rs", "/tests/**/*.rs", "/README.md", "/CHANGELOG.md", "/LICENSE*"]
 
 [lints.rust]
 unsafe_code = "deny"
