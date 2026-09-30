@@ -3,7 +3,7 @@
 ### Unreleased
 - Fixed
   - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
-  - Claude Code hooks now run in a project whose path contains spaces.
+  - Claude Code hooks now run in a project whose path contains spaces, in a checkout with Windows line endings, and when Claude Code runs them through PowerShell.
   - The published crate no longer includes `.claude/`, `.github/`, or the hook tests.
   - `/release` no longer asks for permission to run the hook tests.
 
