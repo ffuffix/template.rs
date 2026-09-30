@@ -14,6 +14,7 @@
   - `/release` creates an annotated tag, so the `git push --follow-tags` it prints pushes the tag too.
 - Changed
   - The Claude Code hooks are a small Rust package run through `cargo` instead of Python scripts, so they work without Python, including on macOS, whose built-in `python3` was too old for them.
+  - Claude Code only calls a change done once `cargo doc --no-deps` also finishes without warnings, matching CI.
 
 ### 0.1.0
 - Added

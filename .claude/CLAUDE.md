@@ -15,7 +15,7 @@ The greeting code in `src/` is a placeholder that will be replaced.
 
 ## Checks
 
-A change is done when `cargo clippy --all-targets -- -D warnings` and `cargo test` both pass. If either fails, show its output rather than summarising it.
+A change is done when `cargo clippy --all-targets -- -D warnings` and `cargo test` pass and `cargo doc --no-deps` finishes without warnings, which CI treats as errors. If any of them fails, show its output rather than summarising it.
 
 A hook runs `cargo fmt` after every edit to a `.rs` file, so formatting needs no manual step. The hooks are their own package in `.claude/hooks/`, run through `cargo run`. After changing them, run the same checks with `--manifest-path .claude/hooks/Cargo.toml`.
 
