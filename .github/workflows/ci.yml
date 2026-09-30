@@ -24,18 +24,27 @@ jobs:
       - name: Install pinned toolchain
         run: rustup toolchain install
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            .
+            .claude/hooks
       - name: Format
         run: cargo fmt --check
       - name: Lint
         run: cargo clippy --locked --all-targets -- -D warnings
       - name: Test
         run: cargo test --locked
-      - name: Hook tests
-        run: python3 -m unittest discover -s tests/hooks
+      - name: Hooks
+        run: |
+          cargo fmt --check --manifest-path .claude/hooks/Cargo.toml
+          cargo clippy --locked --all-targets --manifest-path .claude/hooks/Cargo.toml -- -D warnings
+          cargo test --locked --manifest-path .claude/hooks/Cargo.toml
       - name: Docs
         run: cargo doc --locked --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
+      - name: Package
+        run: cargo package --locked
 
   msrv:
     name: Minimum supported Rust version

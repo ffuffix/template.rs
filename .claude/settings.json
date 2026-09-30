@@ -9,10 +9,27 @@
       "Bash(cargo fmt *)",
       "Bash(cargo doc *)",
       "Bash(cargo tree *)",
-      "Bash(cargo metadata *)"
+      "Bash(cargo metadata *)",
+      "PowerShell(cargo build *)",
+      "PowerShell(cargo check *)",
+      "PowerShell(cargo test *)",
+      "PowerShell(cargo clippy *)",
+      "PowerShell(cargo fmt *)",
+      "PowerShell(cargo doc *)",
+      "PowerShell(cargo tree *)",
+      "PowerShell(cargo metadata *)"
     ],
     "deny": [
       "Bash(cargo publish *)",
+      "Bash(cargo +* publish)",
+      "Bash(cargo +* publish *)",
+      "Bash(cargo -* publish)",
+      "Bash(cargo -* publish *)",
+      "PowerShell(cargo publish *)",
+      "PowerShell(cargo +* publish)",
+      "PowerShell(cargo +* publish *)",
+      "PowerShell(cargo -* publish)",
+      "PowerShell(cargo -* publish *)",
       "Read(./.env)",
       "Read(./.env.*)"
     ]
@@ -23,8 +40,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/hooks/setup-pending.py\"",
-            "timeout": 15
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- setup-pending",
+            "timeout": 60
           }
         ]
       }
@@ -35,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/hooks/cargo-fmt.py\"",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- rustfmt",
             "timeout": 60
           }
         ]

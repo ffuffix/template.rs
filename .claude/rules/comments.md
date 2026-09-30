@@ -1,6 +1,6 @@
 ---
 paths:
-  - "**/*.{rs,py}"
+  - "**/*.rs"
 ---
 
 # Comments
@@ -24,7 +24,7 @@ Never write:
 ## Where comments belong
 
 - `///` doc comments document `pub` items for callers. A private item gets one only when its name cannot carry the meaning.
-- An explanation that covers a whole file goes in one header at the top (`//!` in Rust, the module docstring in Python), not scattered through the body.
+- An explanation that covers a whole file goes in one header at the top (`//!`), not scattered through the body.
 - `// SAFETY:` comments and the `reason` on `#[expect]` are required by lints. Make them state the actual justification.
 
 When a change makes a comment wrong, fix or delete it in the same edit.

@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Turn this repository into the user's own project, then delete this skill. Other coding agents can follow this file directly.
 
-If `git remote get-url origin` points to `ffuffix/template.rs`, this is the template itself: stop and say so.
+If the repository that `git remote get-url origin` points to is named `template.rs`, whoever owns it, this is the template or a fork of it: stop and say so.
 
 ## How to ask
 
@@ -21,13 +21,14 @@ When confirming, say that most of the changes are inside `.claude/`, which Claud
 - **Full setup** (recommended): sections 1 to 3.
 - **Quick setup**: section 1 only. Conventions and features stay as the template has them, but the name, README, and changelog still become the user's own.
 - **Not now**: change nothing. Setup is suggested again next session.
-- **Skip setup**: keep the project exactly as the template made it and stop suggesting setup. Apply only steps 1 to 3 of Finish, and mention that the README and changelog still describe the template, including `/setup-template` itself.
+- **Skip setup**: keep the project exactly as the template made it and stop suggesting setup. Apply only steps 1 to 3 of Finish, and mention that the README, changelog, and `LICENSE` still describe the template, including `/setup-template` itself.
 
 ## 1. The project
 
 - Crate name, and a one-sentence description of what the project does.
 - Library and binary (the template has both), library only, or binary only. With binary only, tests can exercise it only by running it, so suggest keeping a small library for the logic.
-- License: `MIT OR Apache-2.0` (the Rust convention), MIT, Apache-2.0, or none. If one is chosen, the copyright holder's name.
+- Whether the crate will be published to crates.io (the template assumes it will). Libraries and command-line tools often are; services, games, and desktop apps usually aren't.
+- License: `MIT OR Apache-2.0` (the Rust convention), MIT, Apache-2.0, or none. If one is chosen, the copyright holder's name. The MIT-0 `LICENSE` covers only the template, so it is replaced or removed either way.
 - Keep the greeting example as a starting point, or start empty.
 
 ## 2. Conventions (full setup)
@@ -55,21 +56,24 @@ Check one thing yourself: compare the project rules with the user's personal ins
 Each is kept unless the user says otherwise.
 
 - The `code-reviewer` agent and the `/release` skill.
-- The hook that runs `cargo fmt` after every edit.
+- The hook that runs rustfmt on every Rust file Claude edits.
 - `AGENTS.md`, which points other coding agents to these instructions.
 - `SECURITY.md`, and the acknowledgement time it promises (7 days).
 - The designed headers on `CONTRIBUTING.md` and `SECURITY.md`, or plain Markdown headings.
 - The toolchain pinned in `rust-toolchain.toml`, or the latest stable Rust (check with `rustup check`).
+- Dependabot, which opens pull requests for new Rust releases, dependency updates, and new GitHub Actions versions.
 
 ## 4. Apply
 
 **Name.** It appears in `Cargo.toml`, in `use template_rs::` in `src/main.rs` and `tests/unit/`, in `CARGO_BIN_EXE_template_rs` in `tests/common/mod.rs` (the binary takes the package name), and in the titles of `.claude/CLAUDE.md` and `AGENTS.md`. Run `cargo check` afterwards so `Cargo.lock` follows.
 
-**Package metadata.** Set `description`, `license`, and `repository` in `Cargo.toml`, deriving the repository URL from `git remote get-url origin`. Add the license text from its official source: `LICENSE-MIT` and `LICENSE-APACHE` for the dual license, otherwise `LICENSE`.
+**Package metadata.** Set `description`, `license`, and `repository` in `Cargo.toml`, deriving the repository URL from `git remote get-url origin`. Replace the template's `LICENSE` with the chosen license's text from its official source: `LICENSE-MIT` and `LICENSE-APACHE` for the dual license, otherwise `LICENSE`. With no license, delete `LICENSE` and the `license` field.
 
-**Library or binary only.** For library only, delete `src/main.rs`, `tests/integration/`, `tests/common/`, and their `mod` lines in `tests/main.rs`. For binary only, move the logic into `src/main.rs`, delete `src/lib.rs`, `tests/unit/`, and its `mod` line, and reword the library line in `.claude/rules/rust.md`. Either way, update every description of the test layout that names a removed directory.
+**Not published.** Set `publish = false` in `Cargo.toml` and remove its `include` list, then remove what only matters for crates.io: the `Package` step in `.github/workflows/ci.yml` and the packaged crate in the CI sentence of `.github/CONTRIBUTING.md`, step 6 of `.claude/skills/release/checklist.md`, the `cargo package` entries in the release skill's `allowed-tools`, and the `cargo publish` line in its last step. Keep the `cargo publish` deny rules, which cost nothing.
 
-**Starting empty.** Remove `greet` and `GreetError` along with the tests that use them, and delete helpers in `tests/common/` that become unused, because clippy runs with `-D warnings` and unused code fails it. Remove the placeholder line from `.claude/CLAUDE.md`.
+**Library or binary only.** For library only, delete `src/main.rs`, `tests/integration/`, `tests/common/`, and their `mod` lines in `tests/main.rs`. For binary only, move the logic into `src/main.rs`, delete `src/lib.rs`, `tests/unit/`, and its `mod` line, and remove the rule that tests see only the public API from `.claude/rules/testing.md` and the `pub` item check from `.claude/agents/code-reviewer.md`, because a binary has no public API. Either way, reword the error-handling line in `.claude/rules/rust.md`, which describes both the library and `main`, and update every description of the test layout that names a removed directory.
+
+**Starting empty.** Remove `greet` and `GreetError` along with the tests that use them, leave `src/main.rs` as an empty `fn main() {}` if the binary stays, and delete helpers in `tests/common/` that become unused, because clippy runs with `-D warnings` and unused code fails it. Remove the placeholder line from `.claude/CLAUDE.md`.
 
 **README.** Replace it with a short Markdown README: the project name as the title, the description, a getting started block with `cargo run` and `cargo test`, and a link to `.github/CONTRIBUTING.md`. Delete the template-only images `header.svg`, `body.svg`, `footer.svg`, and `use_template.svg` from `.github/assets/`.
 
@@ -79,23 +83,24 @@ Each is kept unless the user says otherwise.
 
 - Standard Rust test layout: move each file in `tests/unit/` into a `#[cfg(test)] mod tests` at the bottom of the source file it tests, move each integration test to `tests/<name>.rs` with `mod common;` at the top, and delete `tests/main.rs` and `tests/unit/`. Rewrite the Tests section of `.claude/CLAUDE.md`, `.claude/rules/testing.md`, the **Tests** bullet in `.github/CONTRIBUTING.md`, and the reviewer's line about tests under `tests/`.
 - Another changelog format, such as Keep a Changelog: rewrite `.claude/rules/changelog.md`, `CHANGELOG.md`, the **Changelog** bullet in `.github/CONTRIBUTING.md`, and step 4 of `.claude/skills/release/SKILL.md`.
-- No changelog: delete `CHANGELOG.md` and `.claude/rules/changelog.md`, remove `/CHANGELOG.md` from `include` in `Cargo.toml`, and remove the changelog line from `.claude/CLAUDE.md`, step 4 of the release skill, the changelog check in the code reviewer, and the **Changelog** bullet in `.github/CONTRIBUTING.md`.
+- No changelog: delete `CHANGELOG.md` and `.claude/rules/changelog.md`, remove `/CHANGELOG.md` from `include` in `Cargo.toml` if it is still there, and remove the changelog line from `.claude/CLAUDE.md`, step 4 of the release skill, the changelog check in the code reviewer, and the **Changelog** bullet in `.github/CONTRIBUTING.md`.
 - Lints: edit `[lints]` in `Cargo.toml`. If `unsafe_code` is no longer denied, update the `unsafe` lines in `.claude/rules/rust.md`.
 - Minimum Rust version: change `rust-version` in `Cargo.toml` and `RUSTUP_TOOLCHAIN` in the `msrv` job of `.github/workflows/ci.yml` together. If it matches the pinned toolchain, the `msrv` job checks nothing extra, so offer to remove it and the sentence about it in `.claude/CLAUDE.md`.
 
 **Removing features.** A feature is only gone when nothing mentions it. After removing one, search the repository for its name and fix every remaining mention.
 
 - `code-reviewer` and `/release`: `.claude/agents/code-reviewer.md` and `.claude/skills/release/`, plus their lines in `AGENTS.md`.
-- The formatting hook: its `PostToolUse` entry in `.claude/settings.json`, `.claude/hooks/cargo-fmt.py`, `tests/hooks/test_cargo_fmt.py`, and the formatting hook mentions in `.claude/CLAUDE.md`, `AGENTS.md`, and `.github/CONTRIBUTING.md`. In `.claude/CLAUDE.md`, replace the hook line with an instruction to run `cargo fmt` after editing Rust files.
+- The formatting hook: its `PostToolUse` entry in `.claude/settings.json`, `.claude/hooks/src/rustfmt.rs` with its `mod` line, match arm, and usage entry in `.claude/hooks/src/main.rs`, `.claude/hooks/tests/integration/rustfmt.rs` with its `mod` line, and the formatting hook mentions in `.claude/CLAUDE.md`, `AGENTS.md`, and `.github/CONTRIBUTING.md`. In `.claude/CLAUDE.md`, replace the hook line with an instruction to run `cargo fmt` after editing Rust files.
 - `AGENTS.md`: the file, and the sentence about other assistants in `.github/CONTRIBUTING.md`.
 - `SECURITY.md`: `.github/SECURITY.md` and `.github/assets/header_security.svg`.
 - Designed headers: replace the image block at the top of `.github/CONTRIBUTING.md` with `# Contributing` and of `.github/SECURITY.md` with `# Security policy`, then delete `header_contributing.svg` and `header_security.svg`. If `.github/assets/` ends up empty, delete it.
 - Latest stable toolchain: update `channel` in `rust-toolchain.toml` and the version in `.github/CONTRIBUTING.md` if it names one.
+- Dependabot: `.github/dependabot.yml`.
 
 ## 5. Finish
 
-1. Delete the setup itself: `.claude/skills/setup-template/`, `.claude/hooks/setup-pending.py`, `tests/hooks/test_setup_pending.py`, the `SessionStart` entry in `.claude/settings.json`, and the `setup-template` line in `AGENTS.md`.
-2. If `.claude/hooks/` is now empty, also delete it, the empty `hooks` block in `.claude/settings.json`, `tests/hooks/` and its row in `.claude/rules/testing.md`, the `Hook tests` step in `.github/workflows/ci.yml`, step 4 of `.claude/skills/release/checklist.md`, the `python3` entry in the release skill's `allowed-tools`, and the Python and hook test mentions in `.github/CONTRIBUTING.md`.
-3. Run `cargo fmt`, `cargo clippy --all-targets -- -D warnings`, and `cargo test`, plus `python3 -m unittest discover -s tests/hooks` if `tests/hooks/` still exists. Fix anything that fails.
+1. Delete the setup itself: `.claude/skills/setup-template/`, `.claude/hooks/src/setup_pending.rs` with its `mod` line, match arm, and usage entry in `.claude/hooks/src/main.rs`, `.claude/hooks/tests/integration/setup_pending.rs` with its `mod` line, the `SessionStart` entry in `.claude/settings.json`, and the `setup-template` line in `AGENTS.md`.
+2. If no hooks are left in `.claude/hooks/src/`, also delete `.claude/hooks/`, the empty `hooks` block in `.claude/settings.json`, the hooks sentences in `.claude/CLAUDE.md`, the hooks paragraph and path in `.claude/rules/testing.md`, the `Hooks` step and the `.claude/hooks` cache entry in `.github/workflows/ci.yml`, the `/.claude/hooks` directory in `.github/dependabot.yml`, step 4 of `.claude/skills/release/checklist.md`, the hooks mention in `.github/CONTRIBUTING.md`, and `/.claude/hooks/target` in `.gitignore`.
+3. Run `cargo fmt`, `cargo clippy --all-targets -- -D warnings`, and `cargo test`, and the same three with `--manifest-path .claude/hooks/Cargo.toml` if `.claude/hooks/` still exists. Fix anything that fails.
 4. Search for `template_rs`, `template.rs`, and `ffuffix`, and resolve any leftovers.
-5. Summarize what changed and what was removed, and suggest a commit message. Commit only if the user asks.
+5. Summarize what changed and what was removed, and suggest a commit message. Commit only if the user asks. If `SECURITY.md` stays, remind the user to turn on private vulnerability reporting in the repository's settings, because the **Report a vulnerability** button it points to only appears once that is on.

@@ -4,7 +4,7 @@ description: Prepare a release. Verifies the project, bumps the version, updates
 disable-model-invocation: true
 argument-hint: "<version>"
 arguments: [version]
-allowed-tools: Bash(git status *) Bash(git tag *) Bash(git add *) Bash(git commit *) Bash(cargo package *) Bash(python3 -m unittest *)
+allowed-tools: Bash(git status *) Bash(git for-each-ref *) Bash(git tag *) Bash(git add *) Bash(git commit *) Bash(cargo package *) PowerShell(git status *) PowerShell(git for-each-ref *) PowerShell(git tag *) PowerShell(git add *) PowerShell(git commit *) PowerShell(cargo package *)
 ---
 
 Prepare release `$version`.
@@ -12,7 +12,7 @@ Prepare release `$version`.
 ## Current state
 
 - Uncommitted changes (empty means clean): !`git status --short`
-- Latest tags: !`git tag --list --sort=-creatordate | head -n 5`
+- Latest tags: !`git for-each-ref --sort=-creatordate --count=5 --format="%(refname:short)" refs/tags`
 
 ## Steps
 
@@ -20,7 +20,7 @@ Prepare release `$version`.
 2. Run every check in [checklist.md](checklist.md). Stop at the first failure and show its output.
 3. Set `version` in `Cargo.toml` to `$version`, then run `cargo check` so `Cargo.lock` picks up the change.
 4. In `CHANGELOG.md`, rename `### Unreleased` to `### $version`. If that section is missing or has no entries, stop and ask what to write.
-5. Commit with the message `release: v$version` and tag the commit `v$version`.
+5. Commit with the message `release: v$version`, then tag the commit with `git tag -a v$version -m v$version`. The tag must be annotated, because `git push --follow-tags` skips lightweight tags.
 6. Print the commands that finish the release, and do not run them:
    - `git push --follow-tags`
    - `cargo publish`
