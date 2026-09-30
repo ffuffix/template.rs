@@ -23,8 +23,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/hooks/setup-pending.py\"",
-            "timeout": 15
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- setup-pending",
+            "timeout": 60
           }
         ]
       }
@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/hooks/cargo-fmt.py\"",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- cargo-fmt",
             "timeout": 60
           }
         ]

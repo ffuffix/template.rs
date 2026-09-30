@@ -86,7 +86,7 @@ Each is kept unless the user says otherwise.
 **Removing features.** A feature is only gone when nothing mentions it. After removing one, search the repository for its name and fix every remaining mention.
 
 - `code-reviewer` and `/release`: `.claude/agents/code-reviewer.md` and `.claude/skills/release/`, plus their lines in `AGENTS.md`.
-- The formatting hook: its `PostToolUse` entry in `.claude/settings.json`, `.claude/hooks/cargo-fmt.py`, `tests/hooks/test_cargo_fmt.py`, and the formatting hook mentions in `.claude/CLAUDE.md`, `AGENTS.md`, and `.github/CONTRIBUTING.md`. In `.claude/CLAUDE.md`, replace the hook line with an instruction to run `cargo fmt` after editing Rust files.
+- The formatting hook: its `PostToolUse` entry in `.claude/settings.json`, `.claude/hooks/src/cargo_fmt.rs` with its `mod` line, match arm, and usage entry in `.claude/hooks/src/main.rs`, `.claude/hooks/tests/integration/cargo_fmt.rs` with its `mod` line, and the formatting hook mentions in `.claude/CLAUDE.md`, `AGENTS.md`, and `.github/CONTRIBUTING.md`. In `.claude/CLAUDE.md`, replace the hook line with an instruction to run `cargo fmt` after editing Rust files.
 - `AGENTS.md`: the file, and the sentence about other assistants in `.github/CONTRIBUTING.md`.
 - `SECURITY.md`: `.github/SECURITY.md` and `.github/assets/header_security.svg`.
 - Designed headers: replace the image block at the top of `.github/CONTRIBUTING.md` with `# Contributing` and of `.github/SECURITY.md` with `# Security policy`, then delete `header_contributing.svg` and `header_security.svg`. If `.github/assets/` ends up empty, delete it.
@@ -94,8 +94,8 @@ Each is kept unless the user says otherwise.
 
 ## 5. Finish
 
-1. Delete the setup itself: `.claude/skills/setup-template/`, `.claude/hooks/setup-pending.py`, `tests/hooks/test_setup_pending.py`, the `SessionStart` entry in `.claude/settings.json`, and the `setup-template` line in `AGENTS.md`.
-2. If `.claude/hooks/` is now empty, also delete it, the empty `hooks` block in `.claude/settings.json`, `tests/hooks/` and its row in `.claude/rules/testing.md`, the `Hook tests` step in `.github/workflows/ci.yml`, step 4 of `.claude/skills/release/checklist.md`, the `python3` entry in the release skill's `allowed-tools`, and the Python and hook test mentions in `.github/CONTRIBUTING.md`.
-3. Run `cargo fmt`, `cargo clippy --all-targets -- -D warnings`, and `cargo test`, plus `python3 -m unittest discover -s tests/hooks` if `tests/hooks/` still exists. Fix anything that fails.
+1. Delete the setup itself: `.claude/skills/setup-template/`, `.claude/hooks/src/setup_pending.rs` with its `mod` line, match arm, and usage entry in `.claude/hooks/src/main.rs`, `.claude/hooks/tests/integration/setup_pending.rs` with its `mod` line, the `SessionStart` entry in `.claude/settings.json`, and the `setup-template` line in `AGENTS.md`.
+2. If no hooks are left in `.claude/hooks/src/`, also delete `.claude/hooks/`, the empty `hooks` block in `.claude/settings.json`, the hooks sentences in `.claude/CLAUDE.md`, the hooks paragraph and path in `.claude/rules/testing.md`, the `Hooks` step and the `.claude/hooks` cache entry in `.github/workflows/ci.yml`, step 4 of `.claude/skills/release/checklist.md`, the hooks mention in `.github/CONTRIBUTING.md`, and `/.claude/hooks/target` in `.gitignore`.
+3. Run `cargo fmt`, `cargo clippy --all-targets -- -D warnings`, and `cargo test`, and the same three with `--manifest-path .claude/hooks/Cargo.toml` if `.claude/hooks/` still exists. Fix anything that fails.
 4. Search for `template_rs`, `template.rs`, and `ffuffix`, and resolve any leftovers.
 5. Summarize what changed and what was removed, and suggest a commit message. Commit only if the user asks.

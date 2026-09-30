@@ -17,13 +17,13 @@ The greeting code in `src/` is a placeholder that will be replaced.
 
 A change is done when `cargo clippy --all-targets -- -D warnings` and `cargo test` both pass. If either fails, show its output rather than summarising it.
 
-A hook runs `cargo fmt` after every edit to a `.rs` file, so formatting needs no manual step.
+A hook runs `cargo fmt` after every edit to a `.rs` file, so formatting needs no manual step. The hooks are their own package in `.claude/hooks/`, run through `cargo run`. After changing them, run the same checks with `--manifest-path .claude/hooks/Cargo.toml`.
 
 The toolchain is pinned in `rust-toolchain.toml`, but code must also build on the older `rust-version` in `Cargo.toml`. CI checks this and a local build does not, so do not use language or library features stabilised after that version.
 
 ## Tests
 
-Tests never go in `src/`. Every Rust test lives in the single test binary under `tests/`: unit tests in `tests/unit/`, tests that run the binary in `tests/integration/`, shared helpers in `tests/common/`. `.claude/rules/testing.md` has the details and loads when you open a file there.
+Tests never go in `src/`. Every test of the crate lives in the single test binary under `tests/`: unit tests in `tests/unit/`, tests that run the binary in `tests/integration/`, shared helpers in `tests/common/`. The hooks package keeps its tests the same way under `.claude/hooks/tests/`. `.claude/rules/testing.md` has the details and loads when you open a file there.
 
 ## Conventions
 

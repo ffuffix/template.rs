@@ -8,4 +8,4 @@ CLAUDE.local.md
 .directory
 
 /target
-__pycache__/
+/.claude/hooks/target

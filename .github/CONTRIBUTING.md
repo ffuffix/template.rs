@@ -10,7 +10,7 @@ For anything bigger than a small fix, open an issue first so we can agree on the
 
 ## Setup
 
-Install Rust through [rustup](https://rustup.rs). The toolchain is pinned in `rust-toolchain.toml`, and the first `cargo` command installs it. The hook tests also need Python 3.
+Install Rust through [rustup](https://rustup.rs). The toolchain is pinned in `rust-toolchain.toml`, and the first `cargo` command installs it.
 
 ## Making a change
 
@@ -26,7 +26,7 @@ cargo clippy --all-targets -- -D warnings
 cargo test
 ```
 
-CI runs the same checks, plus the docs build, the hook tests, and a build on the minimum Rust version. In the pull request, say what changed and why, and link the issue if there is one.
+CI runs the same checks, plus the docs build, the same three checks for the Claude Code hooks in `.claude/hooks/`, and a build on the minimum Rust version. In the pull request, say what changed and why, and link the issue if there is one.
 
 ## Using Claude Code
 
