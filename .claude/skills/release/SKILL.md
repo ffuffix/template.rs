@@ -4,7 +4,7 @@ description: Prepare a release. Verifies the project, bumps the version, updates
 disable-model-invocation: true
 argument-hint: "<version>"
 arguments: [version]
-allowed-tools: Bash(git status *) Bash(git tag *) Bash(git add *) Bash(git commit *) Bash(cargo package *)
+allowed-tools: Bash(git status *) Bash(git for-each-ref *) Bash(git tag *) Bash(git add *) Bash(git commit *) Bash(cargo package *) PowerShell(git status *) PowerShell(git for-each-ref *) PowerShell(git tag *) PowerShell(git add *) PowerShell(git commit *) PowerShell(cargo package *)
 ---
 
 Prepare release `$version`.
@@ -12,7 +12,7 @@ Prepare release `$version`.
 ## Current state
 
 - Uncommitted changes (empty means clean): !`git status --short`
-- Latest tags: !`git tag --list --sort=-creatordate | head -n 5`
+- Latest tags: !`git for-each-ref --sort=-creatordate --count=5 --format="%(refname:short)" refs/tags`
 
 ## Steps
 

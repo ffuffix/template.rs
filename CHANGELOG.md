@@ -9,6 +9,7 @@
   - The published crate no longer includes `.claude/`, `.github/`, or the hook tests.
   - `/release` no longer asks for permission to run the hook tests.
   - `/setup-template` is no longer suggested in forks of the template, which contributors use to send changes back.
+  - On Windows, the permission rules also cover commands Claude Code runs through PowerShell, and `/release` starts without Git Bash.
 - Changed
   - The Claude Code hooks are a small Rust package run through `cargo` instead of Python scripts, so they work without Python, including on macOS, whose built-in `python3` was too old for them.
 

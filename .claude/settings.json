@@ -9,10 +9,19 @@
       "Bash(cargo fmt *)",
       "Bash(cargo doc *)",
       "Bash(cargo tree *)",
-      "Bash(cargo metadata *)"
+      "Bash(cargo metadata *)",
+      "PowerShell(cargo build *)",
+      "PowerShell(cargo check *)",
+      "PowerShell(cargo test *)",
+      "PowerShell(cargo clippy *)",
+      "PowerShell(cargo fmt *)",
+      "PowerShell(cargo doc *)",
+      "PowerShell(cargo tree *)",
+      "PowerShell(cargo metadata *)"
     ],
     "deny": [
       "Bash(cargo publish *)",
+      "PowerShell(cargo publish *)",
       "Read(./.env)",
       "Read(./.env.*)"
     ]
