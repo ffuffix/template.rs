@@ -43,6 +43,8 @@ jobs:
         run: cargo doc --locked --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
+      - name: Package
+        run: cargo package --locked
 
   msrv:
     name: Minimum supported Rust version

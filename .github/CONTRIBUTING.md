@@ -26,7 +26,7 @@ cargo clippy --all-targets -- -D warnings
 cargo test
 ```
 
-CI runs the same checks, plus the docs build, the same three checks for the Claude Code hooks in `.claude/hooks/`, and a build on the minimum Rust version. In the pull request, say what changed and why, and link the issue if there is one.
+CI runs the same checks, plus the docs build, the same three checks for the Claude Code hooks in `.claude/hooks/`, a build of the packaged crate, and a build on the minimum Rust version. In the pull request, say what changed and why, and link the issue if there is one.
 
 ## Using Claude Code
 

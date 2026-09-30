@@ -4,6 +4,7 @@
 - Added
   - MIT-0 license for the template, so projects made from it don't have to keep its copyright notice.
   - `/setup-template` reminds you to turn on private vulnerability reporting, which `SECURITY.md` relies on.
+  - CI checks that the crate still builds from the files it would be published with.
 - Fixed
   - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
   - Claude Code hooks now run in a project whose path contains spaces, in a checkout with Windows line endings, and when Claude Code runs them through PowerShell.
