@@ -302,7 +302,21 @@ fn fixes(report: &str) -> Option<u64> {
 }
 
 fn command(repo: &Repo, command: &str) -> Option<Value> {
-    if runs_git(command, "commit")
+    let git = git_commands(&commands(command));
+    // `git switch -c work && git commit` commits on the new branch, though the hook sees the
+    // checkout as it was before the command, so only a commit before any new branch counts.
+    let commits_before_branching = git
+        .iter()
+        .take_while(|(subcommand, arguments)| {
+            let flags: &[&str] = match *subcommand {
+                "switch" => &["-c", "-C", "--create", "--force-create"],
+                "checkout" => &["-b", "-B"],
+                _ => &[],
+            };
+            !arguments.iter().any(|argument| flags.contains(argument))
+        })
+        .any(|(subcommand, _)| *subcommand == "commit");
+    if commits_before_branching
         && let Some(trunk) = repo.trunk()
         && repo.branch().as_ref() == Some(&trunk)
     {
@@ -312,7 +326,7 @@ fn command(repo: &Repo, command: &str) -> Option<Value> {
             come along."
         )));
     }
-    if runs_git(command, "push") {
+    if git.iter().any(|(subcommand, _)| *subcommand == "push") {
         let id = repo.change()?.review_id?;
         if !passed(repo, &id) {
             return Some(deny(PUSH_UNREVIEWED));
@@ -321,28 +335,43 @@ fn command(repo: &Repo, command: &str) -> Option<Value> {
     None
 }
 
-/// Whether one of the commands in `command` is `git <subcommand>`, as opposed to text that
-/// only mentions it, such as a string or a line of a heredoc. Claude Code's `if` filter runs
-/// the hook whenever it can't tell, so this check can't rely on it.
-fn runs_git(command: &str, subcommand: &str) -> bool {
-    command.split(['\n', ';', '&', '|', '(', ')']).any(|part| {
-        let mut words = part
-            .split_whitespace()
-            .skip_while(|word| word.contains('=') && !word.starts_with('-'));
-        if words.next() != Some("git") {
-            return false;
-        }
-        while let Some(word) = words.next() {
-            match word {
-                "-C" | "-c" | "--git-dir" | "--work-tree" => {
-                    words.next();
-                }
-                option if option.starts_with('-') => {}
-                word => return word == subcommand,
+/// The words of each command in `command`, in order and without leading variable
+/// assignments, as opposed to text that only mentions a command, such as a string or a line
+/// of a heredoc. Claude Code's `if` filter runs the hook whenever it can't tell, so the
+/// checks here can't rely on it.
+fn commands(command: &str) -> Vec<Vec<&str>> {
+    command
+        .split(['\n', ';', '&', '|', '(', ')'])
+        .map(|part| {
+            part.split_whitespace()
+                .skip_while(|word| word.contains('=') && !word.starts_with('-'))
+                .collect::<Vec<_>>()
+        })
+        .filter(|words| !words.is_empty())
+        .collect()
+}
+
+/// Each `git <subcommand> <arguments>` among `commands`, in order.
+fn git_commands<'a>(commands: &[Vec<&'a str>]) -> Vec<(&'a str, Vec<&'a str>)> {
+    commands
+        .iter()
+        .filter_map(|words| {
+            let mut words = words.iter().copied();
+            if words.next() != Some("git") {
+                return None;
             }
-        }
-        false
-    })
+            while let Some(word) = words.next() {
+                match word {
+                    "-C" | "-c" | "--git-dir" | "--work-tree" => {
+                        words.next();
+                    }
+                    option if option.starts_with('-') => {}
+                    subcommand => return Some((subcommand, words.collect())),
+                }
+            }
+            None
+        })
+        .collect()
 }
 
 fn deny(reason: &str) -> Value {

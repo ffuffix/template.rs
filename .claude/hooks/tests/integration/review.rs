@@ -332,6 +332,35 @@ fn denies_a_commit_on_the_trunk_while_a_tag_has_its_name() {
 }
 
 #[test]
+fn allows_a_commit_on_the_trunk_that_first_makes_a_branch() {
+    let repo = Repo::new();
+    repo.write("README.md", "# Project\n\nMore.\n");
+
+    assert_eq!(
+        bash(&repo, "git switch -c work && git commit -am 'More'"),
+        None
+    );
+    assert_eq!(
+        bash(&repo, "git checkout -b work; git commit -am 'More'"),
+        None
+    );
+    assert!(
+        denied(bash(&repo, "git switch other && git commit -am 'More'")).contains("git switch -c")
+    );
+}
+
+#[test]
+fn denies_a_commit_on_the_trunk_that_makes_a_branch_only_afterwards() {
+    let repo = Repo::new();
+    repo.write("README.md", "# Project\n\nMore.\n");
+
+    assert!(
+        denied(bash(&repo, "git commit -am 'More' && git switch -c work"))
+            .contains("git switch -c")
+    );
+}
+
+#[test]
 fn reacts_only_to_git_commands_that_run() {
     let repo = on_branch();
     repo.write("src/new.rs", "pub fn new() {}\n");

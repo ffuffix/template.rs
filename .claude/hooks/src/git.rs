@@ -5,8 +5,9 @@
 //! git's verbatim patch id of that diff without context lines. Patch ids ignore line
 //! numbers, so committing the change or rebasing it cleanly keeps the id, while editing
 //! its lines, whitespace included, gives a new one. Moving an added line among unchanged
-//! ones keeps the id, because the diff carries no context lines. The diff comes from a tree written through a
-//! scratch copy of the index, which leaves the real index and the working tree untouched.
+//! ones keeps the id, because the diff carries no context lines. The diff comes from a
+//! tree written through a scratch copy of the index, which leaves the real index and the
+//! working tree untouched.
 //!
 //! Files in `.claude/decisions/` count as a change but are left out of the review id: they
 //! only record questions for the user, and adding one must not undo a review.

@@ -27,7 +27,7 @@
   - Claude Code only calls a change done once `cargo doc --no-deps` also finishes without warnings, matching CI.
   - The formatting hook formats only the file Claude edited, so edits stay fast in large projects and other files are left alone.
   - The `code-reviewer` agent sorts its findings into ones to fix now and ones for you to decide, looks for tech debt a change creates, and leaves running the checks to `cargo land`.
-  - Claude commits on a branch rather than on `main`, and `/release` lands the release commit through `cargo land` before tagging it.
+  - Claude commits on a branch rather than on `main`, and may make that branch in the same command, as in `git switch -c work && git commit`. `/release` lands the release commit through `cargo land` before tagging it.
   - `/release` starts from the newest `main`, and asks before releasing while decisions are open or the README image is out of date.
 
 ### 0.1.0

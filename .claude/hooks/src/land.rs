@@ -1,9 +1,9 @@
 //! `cargo land`: put a reviewed change on the trunk. It refuses work that is uncommitted,
 //! on the trunk itself, or without a clean review recorded by the review gate.
 //! `cargo land --reviewed` skips that last check, for coding agents other than Claude Code,
-//! which review by following `.claude/agents/code-reviewer.md` without the gate's hooks. It then catches the trunk up with
-//! `origin` if there is one, rebases the branch onto it, runs `cargo ci`, moves the trunk
-//! to the branch, and pushes it.
+//! which review by following `.claude/agents/code-reviewer.md` without the gate's hooks.
+//! It then catches the trunk up with `origin` if there is one, rebases the branch onto it,
+//! runs `cargo ci`, moves the trunk to the branch, and pushes it.
 //!
 //! The trunk is often checked out in another worktree: the main checkout, while Claude
 //! works in a worktree of its own. Moving the ref there would leave that checkout's files
