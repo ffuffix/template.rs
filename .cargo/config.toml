@@ -1,0 +1,4 @@
+# Commands from .claude/hooks/. Run them from the repository root.
+[alias]
+ci = "run --quiet --locked --manifest-path .claude/hooks/Cargo.toml -- ci"
+land = "run --quiet --locked --manifest-path .claude/hooks/Cargo.toml -- land"

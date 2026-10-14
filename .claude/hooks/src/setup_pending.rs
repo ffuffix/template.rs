@@ -7,17 +7,17 @@
 //! The template is recognized by its repository name alone, whoever owns it, because a
 //! fork keeps the name and its owner wants to contribute back, not set up a new project.
 
-use std::env;
-use std::path::{Path, PathBuf};
-use std::process::{Command, ExitCode, Stdio};
+use std::path::Path;
+use std::process::ExitCode;
+
+use crate::{git, input};
 
 const TEMPLATE_NAME: &str = "template.rs";
 const MESSAGE: &str = "This repository was created from the template.rs template and has not been set up yet. \
     Before other work, suggest running /setup-template, which asks how to personalize the project.";
 
 pub(crate) fn run() -> ExitCode {
-    let project =
-        env::var_os("CLAUDE_PROJECT_DIR").map_or_else(|| PathBuf::from("."), PathBuf::from);
+    let project = input::project_dir();
     let skill = project
         .join(".claude")
         .join("skills")
@@ -42,14 +42,5 @@ fn is_template(origin: &str) -> bool {
 }
 
 fn origin_url(project: &Path) -> String {
-    Command::new("git")
-        .arg("-C")
-        .arg(project)
-        .args(["remote", "get-url", "origin"])
-        .stderr(Stdio::null())
-        .output()
-        .ok()
-        .filter(|output| output.status.success())
-        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
-        .unwrap_or_default()
+    git::output(project, &["remote", "get-url", "origin"]).unwrap_or_default()
 }

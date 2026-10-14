@@ -6,6 +6,10 @@ use std::path::{Path, PathBuf};
 use std::process::{self, Command, Output, Stdio};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+mod repo;
+
+pub(crate) use repo::{Repo, write};
+
 pub(crate) struct TempDir(PathBuf);
 
 impl TempDir {
@@ -33,8 +37,18 @@ impl Drop for TempDir {
 }
 
 pub(crate) fn run_hook(hook: &str, input: &str, environment: &[(&str, &OsStr)]) -> Output {
+    run_hook_in(Path::new("."), hook, input, environment)
+}
+
+pub(crate) fn run_hook_in(
+    directory: &Path,
+    hook: &str,
+    input: &str,
+    environment: &[(&str, &OsStr)],
+) -> Output {
     let mut child = Command::new(env!("CARGO_BIN_EXE_claude-hooks"))
-        .arg(hook)
+        .args(hook.split_whitespace())
+        .current_dir(directory)
         .envs(environment.iter().copied())
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())

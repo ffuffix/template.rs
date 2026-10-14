@@ -10,6 +10,16 @@
       "Bash(cargo doc *)",
       "Bash(cargo tree *)",
       "Bash(cargo metadata *)",
+      "Bash(cargo ci *)",
+      "Bash(cargo land)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git merge-base *)",
+      "Bash(git switch *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
       "PowerShell(cargo build *)",
       "PowerShell(cargo check *)",
       "PowerShell(cargo test *)",
@@ -17,7 +27,17 @@
       "PowerShell(cargo fmt *)",
       "PowerShell(cargo doc *)",
       "PowerShell(cargo tree *)",
-      "PowerShell(cargo metadata *)"
+      "PowerShell(cargo metadata *)",
+      "PowerShell(cargo ci *)",
+      "PowerShell(cargo land)",
+      "PowerShell(git status *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git log *)",
+      "PowerShell(git show *)",
+      "PowerShell(git merge-base *)",
+      "PowerShell(git switch *)",
+      "PowerShell(git add *)",
+      "PowerShell(git commit *)"
     ],
     "deny": [
       "Bash(cargo publish *)",
@@ -30,6 +50,8 @@
       "PowerShell(cargo +* publish *)",
       "PowerShell(cargo -* publish)",
       "PowerShell(cargo -* publish *)",
+      "Bash(cargo land --reviewed *)",
+      "PowerShell(cargo land --reviewed *)",
       "Read(./.env)",
       "Read(./.env.*)"
     ]
@@ -42,6 +64,62 @@
             "type": "command",
             "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- setup-pending",
             "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- decisions",
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "SubagentHandback",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit *)",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "if": "Bash(git push *)",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "PowerShell(git commit *)",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git push *)",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
           }
         ]
       }
@@ -53,6 +131,41 @@
           {
             "type": "command",
             "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- rustfmt",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "code-reviewer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "code-reviewer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cargo run --quiet --locked --manifest-path \"${CLAUDE_PROJECT_DIR}/.claude/hooks/Cargo.toml\" -- review",
             "timeout": 60
           }
         ]

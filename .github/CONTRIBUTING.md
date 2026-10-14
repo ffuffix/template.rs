@@ -10,7 +10,7 @@ For anything bigger than a small fix, open an issue first so we can agree on the
 
 ## Setup
 
-Install Rust through [rustup](https://rustup.rs). The toolchain is pinned in `rust-toolchain.toml`, and the first `cargo` command installs it.
+Install Rust through [rustup](https://rustup.rs). The toolchain is pinned in `rust-toolchain.toml`, and the first `cargo` command installs it. The review workflow in `.claude/` and `cargo land` need git 2.39 or newer.
 
 ## Making a change
 
@@ -21,15 +21,13 @@ Install Rust through [rustup](https://rustup.rs). The toolchain is pinned in `ru
 ## Before opening a pull request
 
 ```bash
-cargo fmt
-cargo clippy --all-targets -- -D warnings
-cargo test
+cargo ci
 ```
 
-CI runs the same checks, plus the docs build, the same three checks for the Claude Code hooks in `.claude/hooks/`, a build of the packaged crate, and a build on the minimum Rust version. In the pull request, say what changed and why, and link the issue if there is one.
+It runs every check CI runs: formatting, lints, tests, the docs build, a build of the packaged crate, the same three checks for the Claude Code hooks in `.claude/hooks/`, and a build on the minimum Rust version if you have that toolchain installed. In the pull request, say what changed and why, and link the issue if there is one.
 
 ## Using Claude Code
 
-This project is developed with [Claude Code](https://code.claude.com/docs), and you are welcome to use it too. The `.claude/` folder teaches it the conventions above, formats the Rust files it edits, and denies it `cargo publish` through permission rules. The first time you open the folder, Claude Code asks you to trust it, because `.claude/settings.json` pre-approves cargo commands and runs that formatting hook. Other assistants that read `AGENTS.md` are pointed to the same instructions.
+This project is developed with [Claude Code](https://code.claude.com/docs), and you are welcome to use it too. The `.claude/` folder teaches it the conventions above, formats the Rust files it edits, has a reviewer agent go through each change before Claude can finish it, and denies it `cargo publish` through permission rules. The first time you open the folder, Claude Code asks you to trust it, because `.claude/settings.json` runs the formatting and review hooks and pre-approves cargo commands, `git add`, `git commit`, and `git switch`. That includes `cargo land`, which moves `main` and pushes it to origin without asking. Other assistants that read `AGENTS.md` are pointed to the same instructions.
 
 Whatever tools you use, you are responsible for what you submit. Read and understand every change before you open a pull request.

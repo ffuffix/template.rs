@@ -11,11 +11,10 @@
 //! A `mod` declaration whose file does not exist yet is expected while Claude
 //! writes a module tree one file at a time, so that error is not reported.
 
-use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode, Output, Stdio};
 
-use serde_json::Value;
+use crate::{cargo, input};
 
 const MAX_ERROR_LINES: usize = 20;
 const UNWRITTEN_MODULE_ERROR: &str = "failed to resolve mod";
@@ -27,7 +26,8 @@ pub(crate) fn run() -> ExitCode {
     let Some(edition) = file
         .parent()
         .and_then(find_manifest)
-        .and_then(|manifest| edition(&manifest))
+        .and_then(|manifest| cargo::package(&manifest))
+        .and_then(|package| package["edition"].as_str().map(str::to_owned))
     else {
         return ExitCode::SUCCESS;
     };
@@ -54,18 +54,11 @@ pub(crate) fn run() -> ExitCode {
 }
 
 fn edited_rust_file() -> Option<PathBuf> {
-    let mut input = String::new();
-    io::stdin().read_to_string(&mut input).ok()?;
-    let payload: Value = serde_json::from_str(&input).ok()?;
-
+    let payload = input::read()?;
     let file = payload["tool_input"]["file_path"]
         .as_str()
         .filter(|file| !file.is_empty())?;
-    let cwd = payload["cwd"]
-        .as_str()
-        .filter(|cwd| !cwd.is_empty())
-        .unwrap_or(".");
-    let path = Path::new(cwd).join(file);
+    let path = input::cwd(&payload).join(file);
     (path.extension()? == "rs").then_some(path)
 }
 
@@ -74,33 +67,6 @@ fn find_manifest(directory: &Path) -> Option<PathBuf> {
         .ancestors()
         .map(|ancestor| ancestor.join("Cargo.toml"))
         .find(|manifest| manifest.is_file())
-}
-
-fn edition(manifest: &Path) -> Option<String> {
-    let output = Command::new("cargo")
-        .args([
-            "metadata",
-            "--no-deps",
-            "--format-version",
-            "1",
-            "--manifest-path",
-        ])
-        .arg(manifest)
-        .stdin(Stdio::null())
-        .stderr(Stdio::null())
-        .output()
-        .ok()
-        .filter(|output| output.status.success())?;
-    let metadata: Value = serde_json::from_slice(&output.stdout).ok()?;
-    let manifest = manifest.canonicalize().ok()?;
-    metadata["packages"].as_array()?.iter().find(|package| {
-        package["manifest_path"]
-            .as_str()
-            .and_then(|path| Path::new(path).canonicalize().ok())
-            .is_some_and(|path| path == manifest)
-    })?["edition"]
-        .as_str()
-        .map(str::to_owned)
 }
 
 fn rustfmt(file: &Path, edition: &str) -> Option<Output> {

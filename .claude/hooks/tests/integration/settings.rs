@@ -10,10 +10,11 @@ fn hook_commands() -> Vec<String> {
     let settings = Path::new(HOOKS).join("..").join("settings.json");
     let settings = fs::read_to_string(settings).expect(".claude/settings.json is readable");
     let settings: Value = serde_json::from_str(&settings).expect(".claude/settings.json is JSON");
+    // A project that removes every hook removes the block too.
     settings["hooks"]
         .as_object()
-        .expect("settings.json has hooks")
-        .values()
+        .into_iter()
+        .flat_map(|events| events.values())
         .filter_map(Value::as_array)
         .flatten()
         .filter_map(|matcher| matcher["hooks"].as_array())

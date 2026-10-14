@@ -1,19 +1,18 @@
 use std::fs;
 use std::path::PathBuf;
-use std::process::{Command, Output};
+use std::process::Output;
 
-use crate::common::{TempDir, run_hook};
+use crate::common::{Repo, run_hook};
 
 struct Project {
-    root: TempDir,
+    repo: Repo,
     skill: PathBuf,
 }
 
 impl Project {
     fn new() -> Self {
-        let root = TempDir::new();
-        git(&root, &["init", "-q"]);
-        let skill = root
+        let repo = Repo::new();
+        let skill = repo
             .path()
             .join(".claude")
             .join("skills")
@@ -22,30 +21,20 @@ impl Project {
         fs::create_dir_all(skill.parent().expect("the skill has a directory"))
             .expect("the skill directory can be created");
         fs::write(&skill, "# Set up\n").expect("the skill can be written");
-        Self { root, skill }
+        Self { repo, skill }
     }
 
     fn set_origin(&self, url: &str) {
-        git(&self.root, &["remote", "add", "origin", url]);
+        self.repo.git(&["remote", "add", "origin", url]);
     }
 
     fn start_session(&self) -> Output {
         run_hook(
             "setup-pending",
             "{}",
-            &[("CLAUDE_PROJECT_DIR", self.root.path().as_os_str())],
+            &[("CLAUDE_PROJECT_DIR", self.repo.path().as_os_str())],
         )
     }
-}
-
-fn git(root: &TempDir, arguments: &[&str]) {
-    let status = Command::new("git")
-        .arg("-C")
-        .arg(root.path())
-        .args(arguments)
-        .status()
-        .expect("git is installed");
-    assert!(status.success(), "git {arguments:?} failed");
 }
 
 #[test]

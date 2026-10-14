@@ -7,6 +7,10 @@
   - CI checks that the crate still builds from the files it would be published with.
   - Dependabot updates for the Rust toolchain, Cargo dependencies, and GitHub Actions.
   - `/setup-template` asks whether the crate will be published to crates.io, and drops the packaging checks if not.
+  - A review gate for Claude Code. Claude can't finish a change until the `code-reviewer` agent has passed it, fixes what the review says is wrong without asking, and leaves the judgment calls for you in `.claude/decisions/`. It needs git 2.39 or newer.
+  - `cargo land`, which puts a reviewed change on `main`: it rebases the branch, runs every CI check, moves `main`, and pushes it if there is a remote. Other coding agents land with `cargo land --reviewed` after reviewing by the same instructions.
+  - `cargo ci`, which runs every check CI runs, including the minimum Rust version when that toolchain is installed.
+  - Clippy warns about `todo!`, `unimplemented!`, and `dbg!`.
 - Fixed
   - The binary greets names that are not valid Unicode, showing `�` for the invalid bytes, instead of panicking.
   - Claude Code hooks now run in a project whose path contains spaces, in a checkout with Windows line endings, and when Claude Code runs them through PowerShell.
@@ -15,13 +19,16 @@
   - `/setup-template` is no longer suggested in forks of the template, which contributors use to send changes back.
   - On Windows, the permission rules also cover commands Claude Code runs through PowerShell, and `/release` starts without Git Bash.
   - Claude Code is also denied `cargo publish` when a toolchain or flag comes first, as in `cargo +stable publish`.
-  - `/release` creates an annotated tag, so the `git push --follow-tags` it prints pushes the tag too.
+  - `/release` creates an annotated tag, which records who tagged the release and when.
   - The `code-reviewer` agent reviews new files that haven't been added to git yet.
   - `/setup-template` no longer leaves rules describing removed code after a library-only, binary-only, or empty setup.
 - Changed
   - The Claude Code hooks are a small Rust package run through `cargo` instead of Python scripts, so they work without Python, including on macOS, whose built-in `python3` was too old for them.
   - Claude Code only calls a change done once `cargo doc --no-deps` also finishes without warnings, matching CI.
   - The formatting hook formats only the file Claude edited, so edits stay fast in large projects and other files are left alone.
+  - The `code-reviewer` agent sorts its findings into ones to fix now and ones for you to decide, looks for tech debt a change creates, and leaves running the checks to `cargo land`.
+  - Claude commits on a branch rather than on `main`, and `/release` lands the release commit through `cargo land` before tagging it.
+  - `/release` starts from the newest `main`, and asks before releasing while decisions are open or the README image is out of date.
 
 ### 0.1.0
 - Added
